@@ -23,3 +23,14 @@ production:
   database: db/production.sqlite3
   pool: 5
   timeout: 5000
+
+chalk_production:
+  adapter: mysql2
+  host: 127.0.0.1
+  encoding: utf8
+  reconnect: false
+  database: chalk_production
+  pool: 5
+  username: chalk
+  password: chalk
+  socket: /tmp/mysql.sock

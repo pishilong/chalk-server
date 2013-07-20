@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class QuestionSection < ActiveRecord::Base
   # extends ...................................................................
 

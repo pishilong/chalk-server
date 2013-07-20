@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class StudyResorce < ActiveRecord::Base
   # extends ...................................................................
   # includes ..................................................................
@@ -9,13 +11,33 @@ class StudyResorce < ActiveRecord::Base
     :container_type, :container_id, :title, :description
 
   # relationships .............................................................
+
   # constants definition ......................................................
+  BEHAVIOR_TYPE = Chalk::Enum.new({
+    '练习' => 'Practice',
+    '测试' => 'Examination'
+  })
+
   # validations ...............................................................
   # callbacks .................................................................
   # scopes ....................................................................
   # additional config .........................................................
   # class methods .............................................................
+
   # public instance methods ...................................................
+  def container
+    return nil if container_type.blank? || container_id.blank?
+    container_type.constantize.where(id: container_id).first
+  end
+
+  def question_container
+    container_type == "QuestionContainer" ? container : nil
+  end
+
+  def knowledge_container
+    container_type == "KnowledgeContainer" ? container : nil
+  end
+
   # protected instance methods ................................................
   # private instance methods ..................................................
 end

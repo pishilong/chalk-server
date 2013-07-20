@@ -5,6 +5,14 @@ Chalk::Application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users
+
+      resources :study_resorces, only: [:show]
+
+      resources :question_containers, only: [:show]
+
+      resources :question_sections, only: [:show]
+
+      resources :questions, only: [:show]
     end
   end
 

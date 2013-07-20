@@ -29,12 +29,17 @@ namespace :chalk do
 
   def backup_chalk_exam_papers
     backup_chalk_cet_exam_papers
+    generate_cet_study_resources
   end
 
   def backup_chalk_cet_exam_papers
     Chalk::ExamPaper.all.each do |exam_paper|
-      exam_category = exam_paper.exam_category
+      next if ExamPaperExtension.where(
+        source_paper_id: exam_paper.source_paper_id,
+        name: exam_paper.name
+      ).exists?
 
+      exam_category = exam_paper.exam_category
       ## Create QuestionContainer
       if exam_paper.status == Chalk::ExamPaper::STATUS['已禁用'] ||
         exam_paper.process_status == Chalk::ExamPaper::PROCESS_STATUS['已禁用']
@@ -44,11 +49,6 @@ namespace :chalk do
         container_status = QuestionContainer::STATUS['正常']
         forbidden_note = nil
       end
-
-      next if ExamPaperExtension.where(
-        source_paper_id: exam_paper.source_paper_id,
-        name: exam_paper.name
-      ).exists?
 
       question_container = QuestionContainer.create!(
         exam_category_id: exam_category.id,
@@ -222,5 +222,8 @@ namespace :chalk do
     )
 
     question
+  end
+
+  def generate_cet_study_resources
   end
 end

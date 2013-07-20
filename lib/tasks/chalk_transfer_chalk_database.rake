@@ -45,10 +45,9 @@ namespace :chalk do
         forbidden_note = nil
       end
 
-      next if QuestionContainer.where(
-        exam_category_id: exam_category.id,
-        source_type: QuestionContainer::SOURCE_TYPE['真题考卷'],
-        status: container_status, forbidden_note: forbidden_note
+      next if ExamPaperExtension.where(
+        source_paper_id: exam_paper.source_paper_id,
+        name: exam_paper.name
       ).exists?
 
       question_container = QuestionContainer.create!(

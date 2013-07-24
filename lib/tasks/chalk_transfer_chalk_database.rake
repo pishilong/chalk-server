@@ -29,80 +29,90 @@ namespace :chalk do
 
   def backup_chalk_exam_papers
     backup_chalk_cet_exam_papers
-    generate_cet_study_resources
+    backup_chalk_ky_en_exam_papers
+    generate_study_resources
   end
 
   def backup_chalk_cet_exam_papers
     Chalk::ExamPaper.all.each do |exam_paper|
-      next if ExamPaperExtension.where(
-        source_paper_id: exam_paper.source_paper_id,
-        name: exam_paper.name
-      ).exists?
-
-      exam_category = exam_paper.exam_category
-      ## Create QuestionContainer
-      if exam_paper.status == Chalk::ExamPaper::STATUS['已禁用'] ||
-        exam_paper.process_status == Chalk::ExamPaper::PROCESS_STATUS['已禁用']
-        container_status = QuestionContainer::STATUS['禁用']
-        forbidden_note = exam_paper.forbidden_note
-      else
-        container_status = QuestionContainer::STATUS['正常']
-        forbidden_note = nil
-      end
-
-      question_container = QuestionContainer.create!(
-        exam_category_id: exam_category.id,
-        source_type: QuestionContainer::SOURCE_TYPE['真题考卷'],
-        status: container_status, forbidden_note: forbidden_note)
-
-      ## Create ExamPaperExtension
-      exam_paper_extension = ExamPaperExtension.create!(
-        question_container_id: question_container.id,
-        source_paper_id: exam_paper.source_paper_id,
-        import_status: exam_paper.status_str,
-        process_status: exam_paper.process_status_str,
-        name: exam_paper.name,
-        description: exam_paper.description,
-        year: exam_paper.year,
-        month: exam_paper.month,
-        source: exam_paper.source_str,
-        region_type: exam_paper.region_type_str,
-        province_id: exam_paper.province_id,
-        city_id: exam_paper.city_id,
-        district_id: exam_paper.district_id,
-        paper_no: exam_paper.paper_no,
-        duration: 7500)
-
-      ## Create QuestionSection
-      max_level = exam_paper.exam_paper_structures.maximum(:level)
-      exam_paper.child_exam_paper_structures.each do |structure|
-        question_section = duplicate_cet_exam_paper_structure(structure, nil, question_container)
-        backup_cet_exam_paper_structure(structure, question_section, max_level)
-      end
+      duplicate_chalk_exam_papers(exam_paper)
     end
   end
 
-  def backup_cet_exam_paper_structure(structure, section, max_level)
+  def backup_chalk_ky_en_exam_papers
+    Chalk::KyEn::ExamPaper.all.each do |exam_paper|
+      duplicate_chalk_exam_papers(exam_paper)
+    end
+  end
+
+  def duplicate_chalk_exam_papers(exam_paper)
+    return if ExamPaperExtension.where(
+      source_paper_id: exam_paper.source_paper_id,
+      name: exam_paper.name
+    ).exists?
+
+    exam_category = exam_paper.exam_category
+    ## Create QuestionContainer
+    if exam_paper.forbidden?
+      container_status = QuestionContainer::STATUS['禁用']
+      forbidden_note = exam_paper.forbidden_note
+    else
+      container_status = QuestionContainer::STATUS['正常']
+      forbidden_note = nil
+    end
+
+    question_container = QuestionContainer.create!(
+      exam_category_id: exam_category.id,
+      source_type: QuestionContainer::SOURCE_TYPE['真题考卷'],
+      status: container_status, forbidden_note: forbidden_note)
+
+    ## Create ExamPaperExtension
+    exam_paper_extension = ExamPaperExtension.create!(
+      question_container_id: question_container.id,
+      source_paper_id: exam_paper.source_paper_id,
+      import_status: exam_paper.status_str,
+      process_status: exam_paper.process_status_str,
+      name: exam_paper.name,
+      description: exam_paper.description,
+      year: exam_paper.year,
+      month: exam_paper.month,
+      source: exam_paper.source_str,
+      region_type: exam_paper.region_type_str,
+      province_id: exam_paper.province_id,
+      city_id: exam_paper.city_id,
+      district_id: exam_paper.district_id,
+      paper_no: exam_paper.paper_no,
+      duration: 7500)
+
+    ## Create QuestionSection
+    max_level = exam_paper.exam_paper_structures.maximum(:level)
+    exam_paper.child_exam_paper_structures.each do |structure|
+      question_section = duplicate_exam_paper_structure(structure, nil, question_container)
+      backup_exam_paper_structure(structure, question_section, max_level)
+    end
+  end
+
+  def backup_exam_paper_structure(structure, section, max_level)
     if structure.exam_paper_structures.exists?
       structure.exam_paper_structures.order("order_index ASC").each do |child|
-        question_section = duplicate_cet_exam_paper_structure(child, section, nil)
-        backup_cet_exam_paper_structure(child, question_section, max_level)
+        question_section = duplicate_exam_paper_structure(child, section, nil)
+        backup_exam_paper_structure(child, question_section, max_level)
       end
     else
       if structure.level < max_level
         parent_section = section
         (max_level - structure.level).times do
-          parent_section = virtual_cet_exam_paper_structure(parent_section, nil)
+          parent_section = virtual_exam_paper_structure(parent_section, nil)
         end
-        parent_section = duplicate_cet_exam_paper_structure(structure, parent_section, nil)
-        backup_cet_exam_paper_exercises_and_questions(structure, parent_section)
+        parent_section = duplicate_exam_paper_structure(structure, parent_section, nil)
+        backup_exam_paper_exercises_and_questions(structure, parent_section)
       else
-        backup_cet_exam_paper_exercises_and_questions(structure, section)
+        backup_exam_paper_exercises_and_questions(structure, section)
       end
     end
   end
 
-  def duplicate_cet_exam_paper_structure(structure, section, question_container)
+  def duplicate_exam_paper_structure(structure, section, question_container)
     if section
       question_container_id = section.question_container_id
       p_id = section.id
@@ -123,7 +133,7 @@ namespace :chalk do
     question_section
   end
 
-  def virtual_cet_exam_paper_structure(section, question_container)
+  def virtual_exam_paper_structure(section, question_container)
     if section
       question_container_id = section.question_container_id
       p_id = section.id
@@ -144,16 +154,16 @@ namespace :chalk do
     question_section
   end
 
-  def backup_cet_exam_paper_exercises_and_questions(structure, section)
+  def backup_exam_paper_exercises_and_questions(structure, section)
     structure.exam_paper_exercises.order("order_index ASC").each do |exercise|
-      parent_question = duplicate_cet_exam_paper_exercise(section, exercise)
+      parent_question = duplicate_exam_paper_exercise(section, exercise)
       exercise.exam_paper_questions.order("order_index ASC").each do |question|
-        duplicate_cet_exam_paper_question(parent_question, question)
+        duplicate_exam_paper_question(parent_question, question)
       end
     end
   end
 
-  def duplicate_cet_exam_paper_exercise(section, exercise)
+  def duplicate_exam_paper_exercise(section, exercise)
     if ["短对话听力", "长对话听力", "短文听力"].include?(exercise.exercise_type)
       material = exercise.material
     else
@@ -189,7 +199,7 @@ namespace :chalk do
     question
   end
 
-  def duplicate_cet_exam_paper_question(parent_question, chalk_question)
+  def duplicate_exam_paper_question(parent_question, chalk_question)
     question_content = QuestionContent.create!(
       answer_type: chalk_question.answer_type,
       difficulty: chalk_question.difficulty,
@@ -224,6 +234,23 @@ namespace :chalk do
     question
   end
 
-  def generate_cet_study_resources
+  def generate_study_resources
+    QuestionContainer.group(:exam_category_id).count.each do |category_id, _|
+      exam_category = ExamCategory.find(category_id)
+      exam_category.question_containers.each do |question_container|
+        next if StudyResorce.where(exam_category_id: exam_category.id,
+          behavior_type: StudyResorce::BEHAVIOR_TYPE['测试'],
+          container_type: 'QuestionContainer',
+          container_id: question_container.id,
+          title: question_container.exam_paper_extension.name,
+          description: nil).exists?
+        StudyResorce.create!(exam_category_id: exam_category.id,
+          behavior_type: StudyResorce::BEHAVIOR_TYPE['测试'],
+          container_type: 'QuestionContainer',
+          container_id: question_container.id,
+          title: question_container.exam_paper_extension.name,
+          description: nil)
+      end
+    end
   end
 end

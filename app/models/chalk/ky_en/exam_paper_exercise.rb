@@ -1,50 +1,40 @@
 # encoding: utf-8
 
-class ExamCategory < ActiveRecord::Base
+class Chalk::KyEn::ExamPaperExercise < ActiveRecord::Base
   # extends ...................................................................
   # includes ..................................................................
   #include ActiveModel::ForbiddenAttributesProtection
   #include TarActivity
-
   # security (i.e. attr_accessible) ...........................................
-  attr_accessible :exam_type, :subject
 
   # relationships .............................................................
-  has_many :question_containers
-  has_many :question_sections
-  has_many :questions
-  has_many :knowledge_containers
-  has_many :knowledge_trees
-  has_many :knowledges
-  has_many :keypoints
+  belongs_to :exam_paper, class_name: "Chalk::KyEn::ExamPaper"
+  belongs_to :exam_paper_structure, class_name: "Chalk::KyEn::ExamPaperStructure"
+  belongs_to :processing_user, class_name: "User"
 
-  has_many :study_resorces
-  has_many :study_resorce_categories
+  has_many :exam_paper_questions, class_name: "Chalk::KyEn::ExamPaperQuestion"
 
   # constants definition ......................................................
-  EXAM_TYPE = Chalk::Enum.new %w(中考 高考 CET4 CET6 考研)
-
-  SUBJECT = Chalk::Enum.new %w(语文 数学 英语 理综 物理 化学 生物 文综 政治 历史 地理)
+  PROCESS_STATUS = Chalk::Enum.new({
+    '未处理' => 0,
+    '一轮处理中' => 10,
+    '一轮处理完毕' => 20,
+    '二轮处理中' => 30,
+    '二轮处理完毕' => 40,
+  })
 
   # validations ...............................................................
   # callbacks .................................................................
   # scopes ....................................................................
+
   # additional config .........................................................
+  establish_connection :chalk_production
 
   # class methods .............................................................
-  def self.cet4_exam_category
-    ExamCategory.where(exam_type: ExamCategory::EXAM_TYPE['CET4'],
-      subject: ExamCategory::SUBJECT['英语']).first
-  end
-
-  def self.cet6_exam_category
-    ExamCategory.where(exam_type: ExamCategory::EXAM_TYPE['CET6'],
-      subject: ExamCategory::SUBJECT['英语']).first
-  end
 
   # public instance methods ...................................................
-  def cet?
-    exam_type == EXAM_TYPE['CET4'] || exam_type == EXAM_TYPE['CET6']
+  def process_status_str
+    process_status ? PROCESS_STATUS.key(process_status) : nil
   end
 
   # protected instance methods ................................................

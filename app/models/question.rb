@@ -71,7 +71,7 @@ class Question < ActiveRecord::Base
   end
 
   ## TODO
-  def question_template(behavior_type)
+  def question_template_type(behavior_type)
     if exam_category.cet?
       if behavior_type == StudyResorce::BEHAVIOR_TYPE['练习']
         QUESTION_TEMPLATE_TYPE['左右']

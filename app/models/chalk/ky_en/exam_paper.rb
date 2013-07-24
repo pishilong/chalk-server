@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class Chalk::ExamPaper < ActiveRecord::Base
+class Chalk::KyEn::ExamPaper < ActiveRecord::Base
   # extends ...................................................................
   # includes ..................................................................
   #include ActiveModel::ForbiddenAttributesProtection
@@ -8,9 +8,9 @@ class Chalk::ExamPaper < ActiveRecord::Base
   # security (i.e. attr_accessible) ...........................................
 
   # relationships .............................................................
-  has_many :exam_paper_structures, class_name: "Chalk::ExamPaperStructure"
-  has_many :exam_paper_exercises, class_name: "Chalk::ExamPaperExercise"
-  has_many :exam_paper_questions, class_name: "Chalk::ExamPaperQuestion"
+  has_many :exam_paper_structures, class_name: "Chalk::KyEn::ExamPaperStructure"
+  has_many :exam_paper_exercises, class_name: "Chalk::KyEn::ExamPaperExercise"
+  has_many :exam_paper_questions, class_name: "Chalk::KyEn::ExamPaperQuestion"
 
   # constants definition ......................................................
   TYPE = Chalk::Enum.new(
@@ -69,13 +69,8 @@ class Chalk::ExamPaper < ActiveRecord::Base
   end
 
   def exam_category
-    if paper_type == TYPE['全国大学英语四级考试']
-      ExamCategory.where(exam_type: ExamCategory::EXAM_TYPE['CET4'],
-        subject: ExamCategory::SUBJECT['英语']).first
-    elsif paper_type == TYPE['全国大学英语六级考试']
-      ExamCategory.where(exam_type: ExamCategory::EXAM_TYPE['CET6'],
-        subject: ExamCategory::SUBJECT['英语']).first
-    end
+    ExamCategory.where(exam_type: ExamCategory::EXAM_TYPE['考研'],
+      subject: ExamCategory::SUBJECT['英语']).first
   end
 
   def status_str

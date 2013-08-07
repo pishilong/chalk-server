@@ -1,6 +1,21 @@
 Chalk::Application.routes.draw do
-  resources :users
+  namespace :tar do
+    resources :questions, only: [:show, :update] do
+      get :keypoint_mode, :on => :member
 
+      resources :keypoints,
+                :only => [:update, :destroy],
+                :controller => 'question/keypoints'
+
+      resources :tags,
+                :only => [:create, :update, :destroy],
+                :controller => 'question/tags'
+
+      resources :attributes,
+                :only => [:update],
+                :controller => 'question/attributes'
+    end
+  end
 
   namespace :api do
     namespace :v1 do

@@ -1,4 +1,7 @@
 Chalk::Application.routes.draw do
+
+  root :to => 'main#index'
+
   namespace :tar do
     resources :questions, only: [:show, :update] do
       get :keypoint_mode, :on => :member

@@ -10,18 +10,11 @@ class Tar::QuestionsController < ApplicationController
   def show
   end
 
-  # 更新题目
+  # 更新题目, 包括是否启用选项解析等
   # PUT /:id
   # content-type: JSON
   # description: update question and/or the question's content
   def update
-  end
-
-  # 修改考察点关联模式
-  # PUT /:id/keypoint_mode
-  # parameters:
-  #   option_mode: true / false
-  def keypoint_mode
   end
 
 end

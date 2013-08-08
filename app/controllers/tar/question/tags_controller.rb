@@ -8,6 +8,7 @@ class Tar::Question::TagsController < ApplicationController
   # POST /
   # parameters:
   #   new_tag_type: true / false, 为 true 时表示同时创建新的标签类型
+  #   parent_id: 仅用于 new_tag_type 为 true 时, 可以为空
   #   question_tag_type_name: 仅用于 new_tag_type 为 true 时
   #   question_tag_type_id: 仅用于 new_tag_type 为 false 或空时
   #   name

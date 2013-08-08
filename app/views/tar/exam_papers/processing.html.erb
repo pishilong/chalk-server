@@ -1,0 +1,38 @@
+<div class="row"><h3>题目处理</h3></div>
+
+<div class="row" ng-app="tarApp" ng-controller="ExamPapersProcessingCtrl">
+  <table id="exam-papers" class="table table-bordered table-striped table-hover table-condensed">
+    <thead>
+      <tr>
+        <th>年份</th>
+        <th>省份</th>
+        <th>文理</th>
+        <th colspan="{{maxChoiceQuestions}}">选择题</th>
+        <th colspan="{{maxFillingQuestions}}">填空题</th>
+        <th colspan="{{maxAnsweringQuestions}}">解答题</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="exam_paper in exam_papers">
+        <td>{{exam_paper.year}}</td>
+        <td>{{exam_paper.province_text}}</td>
+        <td>{{exam_paper.arts_science_text}}</td>
+        <td ng-repeat="question in exam_paper.choice_questions">
+          <span ng-if="question">
+            <a href="#">{{question.number}}</a>
+          </span>
+        </td>
+        <td ng-repeat="question in exam_paper.filling_questions">
+          <span ng-if="question">
+            <a href="#">{{question.number}}</a>
+          </span>
+        </td>
+        <td ng-repeat="question in exam_paper.answering_questions">
+          <span ng-if="question">
+            <a href="#">{{question.number}}</a>
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

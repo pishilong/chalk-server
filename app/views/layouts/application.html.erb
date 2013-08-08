@@ -9,11 +9,13 @@
   <%= javascript_include_tag "application" %>
 </head>
 <%
-  body_classes = [controller_path.gsub('/', '__'), action_name]
+  body_classes = [controller_path.gsub('/', '-'), action_name]
 -%>
 <%= content_tag :body, class: body_classes.join(' ') do %>
   <%= yield(:header) %>
 
-  <%= content_for?(:body) ? yield(:body) : yield %>
+  <div class="container">
+    <%= content_for?(:body) ? yield(:body) : yield %>
+  </div>
 <% end -%>
 </html>

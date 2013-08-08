@@ -1,8 +1,12 @@
 Chalk::Application.routes.draw do
 
-  root :to => 'main#index'
+  root :to => 'tar#index'
 
   namespace :tar do
+    resources :exam_papers, only: [] do
+      get :processing, :on => :collection
+    end
+
     resources :questions, only: [:show, :update] do
       get :keypoint_mode, :on => :member
 

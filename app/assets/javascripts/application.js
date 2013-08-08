@@ -18,3 +18,5 @@
 //= require restangular
 //= require jquery.readyselector.js
 //= require jquery.rest.js
+//= require app_init
+//= require_tree ./tar

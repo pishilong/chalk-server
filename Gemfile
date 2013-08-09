@@ -68,6 +68,8 @@ group :development do
   gem 'yaml_db'
   # Comments document
   gem 'yard'
+  # Process markdown for yard
+  gem 'redcarpet'
 end
 
 #gem 'devise', '~> 2.2.3'

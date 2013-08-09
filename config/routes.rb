@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 Chalk::Application.routes.draw do
 
   root :to => 'tar#index'

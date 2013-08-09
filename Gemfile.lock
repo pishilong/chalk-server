@@ -146,6 +146,7 @@ GEM
       ffi (>= 0.5.0)
     rdoc (3.12.2)
       json (~> 1.4)
+    redcarpet (3.0.0)
     require_all (1.2.1)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
@@ -238,6 +239,7 @@ DEPENDENCIES
   rails (= 3.2.14)
   rails_best_practices
   rb-fsevent (~> 0.9.1)
+  redcarpet
   rspec-rails (~> 2.0)
   sass-rails (~> 3.2.3)
   sextant

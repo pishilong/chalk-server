@@ -18,7 +18,13 @@ class Tar::QuestionsController < Tar::BaseController
     }
 
     @question = {
-      number: 3
+      number: 3,
+      content: 'content',
+      option_a: 'aa',
+      option_b: 'bb',
+      option_c: 'cc',
+      option_d: 'dd',
+      answer: 'C'
     }
   end
 

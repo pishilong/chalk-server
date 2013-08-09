@@ -1,0 +1,38 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+zh:
+  errors:
+    messages:
+      blank: "不能为空"
+    attributes:
+      name:
+        blank: "请填写名称"
+        taken: "名称已经被使用了"
+      node_name:
+        blank: "请填写名称"
+        taken: "名称已经被使用了"
+  activerecord:
+    models:
+      user: "用户"
+    attributes:
+      question:
+        content: "题干"
+        option_a: "A"
+        option_b: "B"
+        option_c: "C"
+        option_d: "D"
+        answer: "答案"
+    errors:
+      models:
+        user:
+          attributes:
+            username:
+              taken: "用户名已经被使用了"
+  views:
+    pagination:
+      first: "«"
+      last: "»"
+      previous: "‹"
+      next: "›"
+      truncate: "..."

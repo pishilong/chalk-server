@@ -7,3 +7,70 @@
 
 <div class="row">
 </div>
+
+<div class="process_content">
+  <div id="left_container" class="two-row-autoheight question-cl" style='top: 80px;'>
+    <div class="two-row-autoheight-overflow">
+      <div class='common_container'>
+        <div id="structure_title_container">
+          <%# TODO = render 'structure_title', section: section %>
+        </div>
+      </div>
+
+      <div class="question_content_container">
+        <% [:content, :option_a, :option_b, :option_c, :option_d, :answer].each do |attr| -%>
+          <%= render "attr", :object => @question, :attr => attr %>
+        <% end -%>
+      </div>
+      <hr/>
+
+      <div id='knowledges_container'>
+        <%#= render 'knowledges', question: question, paper: paper %>
+      </div>
+      <hr/>
+
+      <div id="solving_idea_container">
+        <%#= render 'solving_idea', question: question, type: 'solving_idea' %>
+      </div>
+      <hr/>
+
+      <div id="solving_method_container">
+        <%#= render 'solving_idea', question: question, type: 'solving_method' %>
+      </div>
+      <hr/>
+    </div>
+  </div>
+
+  <div class="two-row-autoheight question-tm" style='top: 80px;'>
+    <div class="two-row-autoheight-overflow">
+      <div id='fallible_point_container'>
+        <%#= render 'fallible_point', question: question %>
+      </div>
+      <hr/>
+
+      <div id='key_step_container'>
+        <%#= render 'key_step', question: question %>
+      </div>
+      <hr/>
+
+      <div id='feature_container'>
+        <%#= render 'feature', question: question %>
+      </div>
+      <hr/>
+
+      <div id='question_difficulty_container'>
+        <%#= render 'difficulty', question: question %>
+      </div>
+      <hr/>
+
+      <div id='other_tags_container'>
+        <%#= render 'other_tags', question: question %>
+      </div>
+      <hr/>
+
+      <div class="text-center" style='padding-top: 5px;'>
+        <%= link_to "一轮处理提交", "#", class: "_confirm btn btn-success btn-small" %>
+      </div>
+    </div>
+  </div>
+</div>

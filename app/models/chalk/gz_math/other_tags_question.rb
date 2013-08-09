@@ -1,0 +1,43 @@
+# encoding: utf-8
+
+class Chalk::GzMath::OtherTagsQuestion < Chalk::Base
+  # extends ...................................................................
+
+  # includes ..................................................................
+  include EnumI18n
+
+  # security (i.e. attr_accessible) ...........................................
+  attr_accessible :other_tag_id, :other_type_tag_id, :exam_exercise_id
+
+  # relationships .............................................................
+  belongs_to :exam_exercise, class_name: "GzMath::ExamExercise"
+  belongs_to :other_tag, class_name: "GzMath::OtherTag"
+  belongs_to :other_type_tag, class_name: "GzMath::OtherTypeTag"
+
+  # constants definition ......................................................
+  TABLE_NAME_PREFIX = "gz_math_"
+  TABLE_NAME = "gz_math_other_tags_questions"
+
+  # validations ...............................................................
+  validates :other_tag_id, :exam_exercise_id, presence: true
+
+  # callbacks .................................................................
+  before_create :init_attributes
+
+  # scopes ....................................................................
+
+  # additional config .........................................................
+  self.table_name_prefix = TABLE_NAME_PREFIX
+  self.table_name = TABLE_NAME
+
+  # class methods .............................................................
+  # public instance methods ...................................................
+  # protected instance methods ................................................
+
+  # private instance methods ..................................................
+  private
+
+  def init_attributes
+    self.other_type_tag_id = self.other_tag.other_type_tag_id
+  end
+end

@@ -1,5 +1,5 @@
 module Api::V1
-  class QuestionsController < ApplicationController
+  class QuestionsController < BaseController
     def show
     end
   end

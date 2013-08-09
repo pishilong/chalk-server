@@ -2,7 +2,7 @@
 
 Chalk::Application.routes.draw do
 
-  root :to => 'tar#index'
+  root :to => 'tar/main#index'
 
   namespace :tar do
     resources :exam_papers, only: [] do

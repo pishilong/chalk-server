@@ -1,5 +1,5 @@
 module Api::V1
-  class UsersController < ApplicationController
+  class UsersController < BaseController
     def index
       @users = User.page(params[:page])
       respond_with @users

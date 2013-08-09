@@ -3,7 +3,7 @@
 # 题目
 #
 # @note **Base URI** `/tar/questions`
-class Tar::QuestionsController < ApplicationController
+class Tar::QuestionsController < Tar::BaseController
 
   # 加载题目
   #

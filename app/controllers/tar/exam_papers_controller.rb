@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class Tar::ExamPapersController < ApplicationController
+class Tar::ExamPapersController < Tar::BaseController
   # 试卷处理
   def processing
     @exam_papers = [

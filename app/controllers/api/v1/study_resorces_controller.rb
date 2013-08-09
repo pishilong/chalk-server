@@ -1,5 +1,5 @@
 module Api::V1
-  class StudyResorcesController < ApplicationController
+  class StudyResorcesController < BaseController
     def show
     end
   end

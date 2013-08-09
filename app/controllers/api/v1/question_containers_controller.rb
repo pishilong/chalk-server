@@ -1,5 +1,5 @@
 module Api::V1
-  class QuestionContainersController < ApplicationController
+  class QuestionContainersController < BaseController
     def show
     end
   end

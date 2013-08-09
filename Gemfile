@@ -92,6 +92,9 @@ gem 'turbo-sprockets-rails3', '~> 0.3.5'
 # 分页
 gem 'kaminari', '~> 0.14.1'
 
+# 排序
+gem 'sorted', '~> 0.4.3'
+
 # 通过邮件发送服务器代码的异常错误
 #gem 'exception_notification', '~> 3.0.0'
 

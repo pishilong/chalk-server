@@ -1,38 +1,65 @@
+<%
+  def calc_max_questions(questions_key)
+    return 1 if @exam_papers.size == 0
+    max = @exam_papers.map{ |paper| (paper[questions_key] || []).size }.max
+    max = 1 if max.zero?
+    max
+  end
+
+  max_choice_questions = calc_max_questions(:choice_questions)
+  max_filling_questions = calc_max_questions(:filling_questions)
+  max_answering_questions = calc_max_questions(:answering_questions)
+%>
+
 <div class="row"><h3>题目处理</h3></div>
 
-<div class="row" ng-app="tarApp" ng-controller="ExamPapersProcessingCtrl">
+<div class="row">
   <table id="exam-papers" class="table table-bordered table-striped table-hover table-condensed">
     <thead>
       <tr>
-        <th>年份</th>
+        <th><%= link_to_sorted "年份", :year %></th>
         <th>省份</th>
-        <th>文理</th>
-        <th colspan="{{maxChoiceQuestions}}">选择题</th>
-        <th colspan="{{maxFillingQuestions}}">填空题</th>
-        <th colspan="{{maxAnsweringQuestions}}">解答题</th>
+        <th><%= link_to_sorted "文理", :arts_science %></th>
+        <th colspan="<%= max_choice_questions %>">选择题</th>
+        <th colspan="<%= max_filling_questions %>">填空题</th>
+        <th colspan="<%= max_answering_questions %>">解答题</th>
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="exam_paper in exam_papers">
-        <td>{{exam_paper.year}}</td>
-        <td>{{exam_paper.province_text}}</td>
-        <td>{{exam_paper.arts_science_text}}</td>
-        <td ng-repeat="question in exam_paper.choice_questions">
-          <span ng-if="question">
-            <a href="#">{{question.number}}</a>
-          </span>
-        </td>
-        <td ng-repeat="question in exam_paper.filling_questions">
-          <span ng-if="question">
-            <a href="#">{{question.number}}</a>
-          </span>
-        </td>
-        <td ng-repeat="question in exam_paper.answering_questions">
-          <span ng-if="question">
-            <a href="#">{{question.number}}</a>
-          </span>
-        </td>
+    <% @exam_papers.each do |paper| -%>
+      <tr>
+        <td><%= paper[:year] %></td>
+        <td><%= paper[:province_text] %></td>
+        <td><%= paper[:arts_science_text] %></td>
+
+        <% paper[:choice_questions].each do |question| -%>
+          <td>
+            <%= link_to question[:number], tar_question_path(question[:number]), :target => "_blank" %>
+          </td>
+        <% end -%>
+        <% (max_choice_questions - paper[:choice_questions].size).times do -%>
+          <td></td>
+        <% end -%>
+
+        <% paper[:filling_questions].each do |question| -%>
+          <td>
+            <%= link_to question[:number], tar_question_path(question[:number]), :target => "_blank" %>
+          </td>
+        <% end -%>
+        <% (max_filling_questions - paper[:filling_questions].size).times do -%>
+          <td></td>
+        <% end -%>
+
+        <% (paper[:answering_questions] || []).each do |question| -%>
+          <td>
+            <%= link_to question[:number], tar_question_path(question[:number]), :target => "_blank" %>
+          </td>
+        <% end -%>
+        <% (max_answering_questions - (paper[:answering_questions] || []).size).times do -%>
+          <td></td>
+        <% end -%>
       </tr>
+    <% end -%>
     </tbody>
   </table>
 </div>

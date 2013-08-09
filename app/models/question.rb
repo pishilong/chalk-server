@@ -4,18 +4,13 @@ class Question < ActiveRecord::Base
   # extends ...................................................................
 
   # includes ..................................................................
+
   include OrderIdx
   order_idx_scope [:exam_category_id, :p_id]
-  #include ActiveModel::ForbiddenAttributesProtection
   #include TarActivity
 
-  # security (i.e. attr_accessible) ...........................................
-  attr_accessible :exam_category_id, :question_type, :p_id, :level, :order_idx,
-    :children_count, :number, :title, :description, :material, :options,
-    :process_status, :processing_user_id, :processing_at, :question_content_id,
-    :scope_id
-
   # relationships .............................................................
+
   belongs_to :exam_category
   belongs_to :question, foreign_key: :p_id
   belongs_to :question_content
@@ -25,6 +20,8 @@ class Question < ActiveRecord::Base
   has_many :question_sections
 
   # constants definition ......................................................
+
+  #
   ROOT_QUESTION_TEMPLATE = Chalk::Enum.new({
     '练习' => {value: 'Practice', '短对话听力' => 11, '长对话听力' => 11,
       '短文听力' => 11, '复合式听力' => 11, '选词填空' => 21, '快速阅读' => 31,
@@ -55,6 +52,7 @@ class Question < ActiveRecord::Base
   # validations ...............................................................
 
   # callbacks .................................................................
+
   before_create :init_attributes
 
   # scopes ....................................................................
@@ -62,6 +60,8 @@ class Question < ActiveRecord::Base
   # class methods .............................................................
 
   # public instance methods ...................................................
+
+  #
   def root_question
     if question
       question.root_question
@@ -101,6 +101,7 @@ class Question < ActiveRecord::Base
   # protected instance methods ................................................
 
   # private instance methods ..................................................
+
   private
 
   def init_attributes

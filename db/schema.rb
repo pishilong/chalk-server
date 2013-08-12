@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130718074645) do
+ActiveRecord::Schema.define(:version => 20130810073401) do
 
   create_table "cities", :force => true do |t|
     t.integer  "province_id"
@@ -98,6 +98,17 @@ ActiveRecord::Schema.define(:version => 20130718074645) do
 
   add_index "knowledge_containers", ["exam_category_id"], :name => "index_knowledge_containers_on_exam_category_id"
 
+  create_table "knowledge_problem_links", :force => true do |t|
+    t.string   "option"
+    t.integer  "knowledge_container_id"
+    t.integer  "problem_id"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+  end
+
+  add_index "knowledge_problem_links", ["knowledge_container_id"], :name => "index_knowledge_problem_links_on_knowledge_container_id"
+  add_index "knowledge_problem_links", ["problem_id"], :name => "index_knowledge_problem_links_on_problem_id"
+
   create_table "knowledge_trees", :force => true do |t|
     t.integer  "exam_category_id"
     t.integer  "knowledge_container_id"
@@ -146,6 +157,28 @@ ActiveRecord::Schema.define(:version => 20130718074645) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "question_attribute_links", :force => true do |t|
+    t.text     "content"
+    t.integer  "problem_id"
+    t.integer  "question_attribute_id"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
+  end
+
+  add_index "question_attribute_links", ["problem_id"], :name => "index_question_attribute_links_on_problem_id"
+  add_index "question_attribute_links", ["question_attribute_id"], :name => "index_question_attribute_links_on_question_attribute_id"
+
+  create_table "question_attributes", :force => true do |t|
+    t.string   "name"
+    t.boolean  "built_in"
+    t.integer  "order_idx"
+    t.integer  "exam_category_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "question_attributes", ["exam_category_id"], :name => "index_question_attributes_on_exam_category_id"
 
   create_table "question_containers", :force => true do |t|
     t.integer  "exam_category_id"
@@ -215,6 +248,46 @@ ActiveRecord::Schema.define(:version => 20130718074645) do
   add_index "question_sections", ["exam_category_id"], :name => "index_question_sections_on_exam_category_id"
   add_index "question_sections", ["question_container_id"], :name => "index_question_sections_on_question_container_id"
   add_index "question_sections", ["question_id"], :name => "index_question_sections_on_question_id"
+
+  create_table "question_tag_links", :force => true do |t|
+    t.boolean  "has_trait"
+    t.boolean  "similar_condition"
+    t.boolean  "similar_purpose"
+    t.integer  "problem_id"
+    t.integer  "question_tag_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  add_index "question_tag_links", ["problem_id"], :name => "index_question_tag_links_on_problem_id"
+  add_index "question_tag_links", ["question_tag_id"], :name => "index_question_tag_links_on_question_tag_id"
+
+  create_table "question_tag_types", :force => true do |t|
+    t.string   "name"
+    t.boolean  "built_in"
+    t.integer  "order_idx"
+    t.boolean  "has_trait"
+    t.text     "sub_names"
+    t.integer  "exam_category_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "question_tag_types", ["exam_category_id"], :name => "index_question_tag_types_on_exam_category_id"
+
+  create_table "question_tags", :force => true do |t|
+    t.string   "name"
+    t.text     "content"
+    t.integer  "level"
+    t.integer  "oreder_idx"
+    t.integer  "parent_id"
+    t.integer  "question_tag_type_id"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+  end
+
+  add_index "question_tags", ["parent_id"], :name => "index_question_tags_on_parent_id"
+  add_index "question_tags", ["question_tag_type_id"], :name => "index_question_tags_on_question_tag_type_id"
 
   create_table "questions", :force => true do |t|
     t.integer  "exam_category_id"

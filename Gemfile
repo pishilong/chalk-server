@@ -1,5 +1,5 @@
 #source 'https://rubygems.org'
-source 'http://ruby.taobao.org'
+source 'http://gems.ruby-china.org'
 
 gem 'rails', '3.2.14'
 
